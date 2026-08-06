@@ -14,6 +14,8 @@ HG.Name = "Droxen Hunger Games"
 
 HG.Game = {
 
+    State = "IDLE",
+
     Active = false,
 
     Joining = false,
@@ -37,6 +39,8 @@ HG.Game = {
 HG.Lobby = {
 
     Players = {},
+
+    ReadyPlayers = {},
 
     EndsAt = 0
 

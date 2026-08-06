@@ -135,8 +135,8 @@ end
 
 function HG.Utils.WorldToPercent(x, y)
 
-    local tl = Config.MapBounds.min
-    local br = Config.MapBounds.max
+    local tl = Config.Map.Bounds.Min
+    local br = Config.Map.Bounds.Max
 
     local px = (x - tl.x) / (br.x - tl.x)
     local py = (y - tl.y) / (br.y - tl.y)
