@@ -249,23 +249,29 @@ AddEventHandler("playerJoining", function()
 
     HG.Players[src] = {
 
-        Source = src,
+    Source = src,
 
-        Alive = false,
+    Alive = false,
 
-        Joined = false,
+    Joined = false,
 
-        Spawned = false,
+    Spawned = false,
 
-        Protected = false,
+    Protected = false,
 
-        Kills = 0,
+    ConfirmedSpawn = false,
 
-        Deaths = 0,
+    SpawnPosition = nil,
 
-        Placement = 0
+    LastPosition = nil,
 
-    }
+    Kills = 0,
+
+    Deaths = 0,
+
+    Placement = 0
+
+}
 
 end)
 
