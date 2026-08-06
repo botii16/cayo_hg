@@ -32,6 +32,8 @@ Config.Circle = {
 
     TickRate = 1000,
 
+    RenderDistance = 180.0,
+
     StartRadius = 1050.0,
 
     Stages = {

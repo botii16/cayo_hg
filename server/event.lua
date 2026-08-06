@@ -6,7 +6,6 @@ HG.Event = {}
 
 function HG.Event.Start()
 
-
     if HG.Game.State ~= "STARTING" then
         return
     end
@@ -20,6 +19,8 @@ function HG.Event.Start()
 
     HG.Utils.Debug("Event started.")
 
+    HG.Circle.Create()
+
     for source in pairs(HG.Lobby.Players) do
 
         local player = HG.GetPlayer(source)
@@ -30,7 +31,6 @@ function HG.Event.Start()
             player.Spawned = false
             player.ConfirmedSpawn = false
             player.SpawnPosition = nil
-
 
             TriggerClientEvent("hg:showSpawn", source, {
                 timeLeft = Config.Game.SpawnSelectionTime
