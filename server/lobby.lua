@@ -76,12 +76,6 @@ RegisterNetEvent("hg:acceptInvite", function()
 
     HG.Player.Join(src)
 
-    HG.Lobby.Players[src] = true
-
-    HG.Lobby.Sync()
-
-    TriggerClientEvent("hg:lobbyJoined", src)
-
     TriggerClientEvent("hg:openLobby", src, {
         joinTime = Config.Game.JoinTime,
         minPlayers = Config.Game.MinPlayers
@@ -93,34 +87,30 @@ end)
 -- Join Match
 ----------------------------------------------------------
 
--- RegisterNetEvent("hg:lobbyJoin", function()
+RegisterNetEvent("hg:lobbyJoin", function()
 
---     local src = source
+    local src = source
 
---     if not HG.Game.Joining then
---         return
---     end
+    local player = HG.GetPlayer(src)
 
---     local player = HG.GetPlayer(src)
+    if not player then
+        return
+    end
 
---     if not player then
---         return
---     end
+    if HG.Lobby.Players[src] then
+        return
+    end
 
---     if player.Joined then
---         return
---     end
+    player.Joined = true
+    player.Alive = true
 
---     player.Joined = true
---     player.Alive = true
+    HG.Lobby.Players[src] = true
 
---     HG.Lobby.Players[src] = true
+    HG.Lobby.Sync()
 
---     HG.Lobby.Sync()
+    TriggerClientEvent("hg:lobbyJoined", src)
 
---     TriggerClientEvent("hg:lobbyJoined", src)
-
--- end)
+end)
 
 ----------------------------------------------------------
 -- Leave Match
@@ -192,23 +182,17 @@ CreateThread(function()
 
         Wait(1000)
 
-        print("[HG] Joining:", HG.Game.Joining, " State:", HG.Game.State)
-
         if not HG.Game.Joining then
             goto continue
         end
-
-        print("[HG] EndTime:", HG.Lobby.EndTime, " Now:", os.time())
 
         HG.Lobby.Sync()
 
         if os.time() >= HG.Lobby.EndTime then
 
-            print("[HG] Countdown finished!")
 
             local players = HG.Utils.TableCount(HG.Lobby.Players)
 
-            print("[HG] Players:", players)
 
             if players < Config.Game.MinPlayers then
 
@@ -219,9 +203,6 @@ CreateThread(function()
                 HG.Lobby.Close()
 
             else
-
-                print("[HG] Starting event!")
-
                 HG.Game.State = "STARTING"
 
                 HG.Game.Joining = false

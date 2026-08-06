@@ -124,17 +124,59 @@ window.addEventListener('message', (event) => {
             break;
 
         case 'showSpawnMap':
+
+            spawnPanel.classList.remove('hidden');
+
+            stopLoading();
             spawnLocked = false;
             pendingSpawnPct = null;
-            spawnPanel.classList.remove('hidden');
-            stopLoading();
-            mapImage.src = data.mapImage;
-            positionRect(zoneCircle, data.circle.x - data.circle.rx, data.circle.y - data.circle.ry, data.circle.rx * 2, data.circle.ry * 2, true);
-            positionRect(villaZone, data.villa.x, data.villa.y, data.villa.w, data.villa.h, false);
+
             mapMarker.classList.add('hidden');
-            setSpawnStatus('Kattints a térképre a landolási ponthoz. A piros terület TILTOTT.', false);
             confirmSpawnBtn.disabled = true;
-            spawnTimer.textContent = data.timeLeft + 's';
+
+            setSpawnStatus('', false);
+
+            mapImage.src = data.mapImage;
+
+            if (data.villa) {
+
+                positionRect(
+
+                    villaZone,
+                    data.villa.x,
+                    data.villa.y,
+                    data.villa.w,
+                    data.villa.h,
+                    false
+
+                );
+
+            }
+
+            let timeLeft = data.timeLeft;
+
+            spawnTimer.textContent = timeLeft + "s";
+
+            if (window.spawnTimerInterval) {
+                clearInterval(window.spawnTimerInterval);
+            }
+
+            window.spawnTimerInterval = setInterval(() => {
+
+                timeLeft--;
+
+                if (timeLeft < 0) {
+
+                    clearInterval(window.spawnTimerInterval);
+
+                    return;
+
+                }
+
+                spawnTimer.textContent = timeLeft + "s";
+
+            }, 1000);
+
             break;
 
         case 'hideSpawnMap':
@@ -143,6 +185,9 @@ window.addEventListener('message', (event) => {
             confirmSpawnBtn.disabled = true;
             stopLoading();
             setSpawnStatus('', false);
+            if (window.spawnTimerInterval) {
+                clearInterval(window.spawnTimerInterval);
+            }
             break;
 
         case 'showSpawnLoading':
@@ -192,14 +237,16 @@ function positionRect(el, xPct, yPct, wPct, hPct, isCircle) {
 }
 
 joinBtn.addEventListener('click', () => {
-    post('acceptInvite', {}).then(res => {
+    post('joinEvent', {}).then(res => {
+
         if (res && res.ok) {
+
             lobbyJoined = true;
+
             syncLobbyJoinedState();
         }
     });
 });
-
 mapWrapper.addEventListener('click', (e) => {
     if (spawnLocked) return;
     const rect = mapWrapper.getBoundingClientRect();

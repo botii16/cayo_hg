@@ -6,7 +6,6 @@ HG.Event = {}
 
 function HG.Event.Start()
 
-    print("[HG] Event.Start() State:", HG.Game.State)
 
     if HG.Game.State ~= "STARTING" then
         return
@@ -32,7 +31,6 @@ function HG.Event.Start()
             player.ConfirmedSpawn = false
             player.SpawnPosition = nil
 
-            print("[HG] Sending showSpawn to", source)
 
             TriggerClientEvent("hg:showSpawn", source, {
                 timeLeft = Config.Game.SpawnSelectionTime
@@ -85,67 +83,67 @@ end
 -- Spawn Selected
 ----------------------------------------------------------
 
-RegisterNetEvent("hg:spawnSelected", function(position)
+-- RegisterNetEvent("hg:spawnSelected", function(position)
 
-    local source = source
+--     local source = source
 
-    local player = HG.GetPlayer(source)
+--     local player = HG.GetPlayer(source)
 
-    if not player then
-        return
-    end
+--     if not player then
+--         return
+--     end
 
-    if not player.Joined then
-        return
-    end
+--     if not player.Joined then
+--         return
+--     end
 
-    if type(position) ~= "table" then
-        return
-    end
+--     if type(position) ~= "table" then
+--         return
+--     end
 
-    player.SpawnPosition = vector3(
-        position.x,
-        position.y,
-        position.z
-    )
+--     player.SpawnPosition = vector3(
+--         position.x,
+--         position.y,
+--         position.z
+--     )
 
-    player.ConfirmedSpawn = false
+--     player.ConfirmedSpawn = false
 
-end)
+-- end)
 
-----------------------------------------------------------
--- Spawn Confirmed
-----------------------------------------------------------
+-- ----------------------------------------------------------
+-- -- Spawn Confirmed
+-- ----------------------------------------------------------
 
-RegisterNetEvent("hg:spawnConfirmed", function()
+-- RegisterNetEvent("hg:spawnConfirmed", function()
 
-    local source = source
+--     local source = source
 
-    local player = HG.GetPlayer(source)
+--     local player = HG.GetPlayer(source)
 
-    if not player then
-        return
-    end
+--     if not player then
+--         return
+--     end
 
-    if not player.Joined then
-        return
-    end
+--     if not player.Joined then
+--         return
+--     end
 
-    if not player.SpawnPosition then
+--     if not player.SpawnPosition then
 
-        HG.Notify(source, "~r~Először válassz spawn pontot!")
+--         HG.Notify(source, "~r~Először válassz spawn pontot!")
 
-        return
+--         return
 
-    end
+--     end
 
-    player.ConfirmedSpawn = true
+--     player.ConfirmedSpawn = true
 
-    HG.Notify(source, "~g~Spawn pont megerősítve!")
+--     HG.Notify(source, "~g~Spawn pont megerősítve!")
 
-    HG.Event.CheckReady()
+--     HG.Event.CheckReady()
 
-end)
+-- end)
 
 ----------------------------------------------------------
 -- Check Ready
@@ -172,13 +170,9 @@ function HG.Event.CheckReady()
 
     end
 
-    HG.Broadcast(
-        "hg:spawnReadyUpdate",
-        ready,
-        joined
-    )
 
     if joined > 0 and ready == joined then
+
 
         HG.Event.StartCountdown()
 
@@ -191,6 +185,7 @@ end
 ----------------------------------------------------------
 
 function HG.Event.StartCountdown()
+
 
     if HG.Game.State == "COUNTDOWN" then
         return

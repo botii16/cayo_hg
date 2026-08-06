@@ -132,37 +132,6 @@ RegisterNetEvent("hg:lobbyPlayers", function(players, onlinePlayers, minPlayers)
 end)
 
 ----------------------------------------------------------
--- Spawn Selection
-----------------------------------------------------------
-
-RegisterNetEvent("hg:showSpawnLoading", function()
-
-    OpenSpawnSelection()
-
-    SendNUIMessage({
-
-        action = "showSpawnLoading",
-
-        text = "Töltés..."
-
-    })
-
-end)
-----------------------------------------------------------
-
-RegisterNetEvent("hg:startMatch", function()
-
-    CloseSpawnSelection()
-
-    SendNUIMessage({
-
-        action = "hideSpawnMap"
-
-    })
-
-end)
-
-----------------------------------------------------------
 
 RegisterNetEvent("hg:eventFinished", function()
 
@@ -198,54 +167,6 @@ RegisterNetEvent("hg:lobbyJoined", function()
 
         action = "joined"
 
-    })
-
-end)
-
-----------------------------------------------------------
-
-RegisterNUICallback("chooseSpawn", function(data, cb)
-
-    if not HG.Client.SpawnOpen then
-
-        cb({
-            ok = false,
-            reason = "Spawn kiválasztás nincs megnyitva."
-        })
-
-        return
-
-    end
-
-    local worldX, worldY = HG.Utils.PercentToWorld(
-        data.x / 100.0,
-        data.y / 100.0
-    )
-
-    TriggerServerEvent("hg:spawnSelected", {
-
-        x = worldX,
-
-        y = worldY,
-
-        z = Config.PlayArea.Center.z
-
-    })
-
-    cb({
-        ok = true
-    })
-
-end)
-
-----------------------------------------------------------
-
-RegisterNUICallback("confirmSpawn", function(data, cb)
-
-    TriggerServerEvent("hg:spawnConfirmed")
-
-    cb({
-        ok = true
     })
 
 end)
@@ -409,36 +330,6 @@ RegisterNetEvent("hg:updateLobby", function(data)
         minPlayers = data.minPlayers,
 
         timeLeft = data.timeLeft
-
-    })
-
-end)
-
-----------------------------------------------------------
--- Joined
-----------------------------------------------------------
-
-RegisterNetEvent("hg:lobbyJoined", function()
-
-    SendNUIMessage({
-
-        action = "joined"
-
-    })
-
-end)
-
-----------------------------------------------------------
--- Close Lobby
-----------------------------------------------------------
-
-RegisterNetEvent("hg:lobbyClosed", function()
-
-    SetNuiFocus(false, false)
-
-    SendNUIMessage({
-
-        action = "hideLobby"
 
     })
 

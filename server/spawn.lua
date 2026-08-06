@@ -5,16 +5,20 @@ HG.Spawn.Selected = {}
 ----------------------------------------------------------
 -- Confirm Spawn
 ----------------------------------------------------------
+RegisterNetEvent("hg:confirmSpawn")
 
-RegisterNetEvent("hg:confirmSpawn", function(xPct, yPct)
+AddEventHandler("hg:confirmSpawn", function(xPct, yPct)
 
     local src = source
+    
 
     local player = HG.GetPlayer(src)
 
     if not player then
+        print("[HG] player == nil")
         return
     end
+
 
     if not player.Joined then
         return
@@ -38,6 +42,8 @@ RegisterNetEvent("hg:confirmSpawn", function(xPct, yPct)
     return
 end
 
+
+
 player.ConfirmedSpawn = true
 
 TriggerClientEvent("hg:spawnConfirmed", src)
@@ -58,7 +64,11 @@ function HG.Spawn.PercentToWorld(xPct, yPct)
     local worldX = min.x + ((max.x - min.x) * (xPct / 100.0))
     local worldY = min.y + ((max.y - min.y) * (yPct / 100.0))
 
-    return vector3(worldX, worldY, Config.Spawn.RandomHeight)
+    return vector3(
+        worldX,
+        worldY,
+        Config.Spawn.RandomHeight
+    )
 
 end
 
@@ -134,18 +144,18 @@ end
 
 function HG.Spawn.StartMatch()
 
+
     for source in pairs(HG.Lobby.Players) do
 
         local player = HG.GetPlayer(source)
 
         if player and player.SpawnPosition then
 
-            TriggerClientEvent("hg:spawnPlayer", source, {
 
+            TriggerClientEvent("hg:spawnPlayer", source, {
                 x = player.SpawnPosition.x,
                 y = player.SpawnPosition.y,
                 z = player.SpawnPosition.z
-
             })
 
             player.Spawned = true

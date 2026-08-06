@@ -64,6 +64,8 @@ end)
 
 RegisterNUICallback("confirmSpawn", function(data, cb)
 
+    print("^2[HG] CLIENT confirmSpawn callback^7")
+
     if not HG.Spawn.Selected then
 
         cb({
@@ -77,6 +79,8 @@ RegisterNUICallback("confirmSpawn", function(data, cb)
         return
 
     end
+
+    print("^2[HG] Sending hg:confirmSpawn to server^7")
 
     TriggerServerEvent(
 
