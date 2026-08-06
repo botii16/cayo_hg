@@ -6,6 +6,8 @@ HG.Event = {}
 
 function HG.Event.Start()
 
+    print("[HG] Event.Start() State:", HG.Game.State)
+
     if HG.Game.State ~= "STARTING" then
         return
     end
@@ -30,7 +32,11 @@ function HG.Event.Start()
             player.ConfirmedSpawn = false
             player.SpawnPosition = nil
 
-            TriggerClientEvent("hg:showSpawnLoading", source)
+            print("[HG] Sending showSpawn to", source)
+
+            TriggerClientEvent("hg:showSpawn", source, {
+                timeLeft = Config.Game.SpawnSelectionTime
+            })
 
         end
 
@@ -209,9 +215,7 @@ function HG.Event.StartCountdown()
 
         Wait(1000)
 
-        HG.Game.State = "RUNNING"
-
-        HG.Broadcast("hg:startMatch")
+        HG.Spawn.StartMatch()
 
     end)
 

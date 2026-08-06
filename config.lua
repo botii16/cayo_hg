@@ -16,7 +16,7 @@ Config.AdminAce = "hg"
 
 Config.Game = {
 
-    MinPlayers = 2,
+    MinPlayers = 1,
     JoinTime = 10,
     SpawnSelectionTime = 20,
     LootPhase = 300,

@@ -19,6 +19,7 @@ server_scripts {
     'server/players.lua',
     'server/lobby.lua',
     'server/event.lua',
+    'server/spawn.lua',
     'server/circle.lua',
     'server/loot.lua'
 }

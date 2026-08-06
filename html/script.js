@@ -82,6 +82,11 @@ window.addEventListener('message', (event) => {
             invitePanel.classList.add('hidden');
 
             break;
+        case 'spawnError':
+
+            setSpawnStatus(data.text, true);
+
+            break;
         case 'showLobby':
 
             currentMinPlayers = data.minPlayers;
