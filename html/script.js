@@ -20,6 +20,9 @@ const spawnStatus = document.getElementById('spawn-status');
 const spawnLoading = document.getElementById('spawn-loading');
 const confirmSpawnBtn = document.getElementById('confirm-spawn-btn');
 
+const countdownOverlay = document.getElementById("countdown-overlay");
+const countdownNumber = document.getElementById("countdown-number");
+
 let currentMinPlayers = 1;
 let currentOnlinePlayers = 0;
 let spawnLocked = false;
@@ -70,6 +73,71 @@ window.addEventListener('message', (event) => {
     const data = event.data;
 
     switch (data.action) {
+        case "showCountdown":
+
+            countdownOverlay.classList.remove("hidden");
+
+            countdownNumber.classList.remove("countdown-fight");
+
+            countdownNumber.textContent = data.value;
+
+            countdownNumber.style.animation = "none";
+
+            countdownNumber.offsetHeight;
+
+            countdownNumber.style.animation = "";
+
+            break;
+
+        case "updateCountdown":
+
+            countdownNumber.classList.remove("countdown-fight");
+
+            countdownNumber.textContent = data.value;
+
+            countdownNumber.style.animation = "none";
+
+            countdownNumber.offsetHeight;
+
+            countdownNumber.style.animation = "";
+
+            break;
+
+        case "fight":
+
+            countdownNumber.textContent = "HARCOLJ!";
+
+            countdownNumber.classList.add("countdown-fight");
+
+            countdownNumber.style.animation = "none";
+
+            countdownNumber.offsetHeight;
+
+            countdownNumber.style.animation = "";
+
+            break;
+
+        case "hideCountdown":
+
+            countdownOverlay.classList.add("hidden");
+
+            break;
+        case "showHUD":
+
+            document.getElementById("hg-hud").classList.remove("hidden");
+            break;
+
+        case "hideHUD":
+
+            document.getElementById("hg-hud").classList.add("hidden");
+            break;
+
+        case "updateHUD":
+
+            document.getElementById("hg-alive").textContent = data.alive;
+            document.getElementById("hg-kills").textContent = data.kills;
+            break;
+
         case 'showInvite':
 
             invitePanel.classList.remove('hidden');

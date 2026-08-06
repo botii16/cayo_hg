@@ -89,23 +89,57 @@
     </div>
 
     <div id="hg-hud" class="hg-hud hidden">
-        <div id="hg-hud-notice" class="hg-hud-notice hidden"></div>
+
+        <div class="hg-hud-top">
+
+            <div class="hg-hud-title">
+                ⚔ DROXEN HUNGER GAMES
+            </div>
+
+            <div id="hg-hud-notice" class="hg-hud-notice hidden"></div>
+
+            <div class="hg-hud-stats">
+
+                <div>
+                    👥 ÉLETBEN <span id="hg-alive">0</span>
+                </div>
+
+                <div>
+                    💀 ÖLÉS <span id="hg-kills">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
         <div class="hg-hud-row">
+
             <div class="hg-hud-box">
                 <span class="hg-hud-label">KÖR SZŰKÜL</span>
                 <span id="hg-zone-timer" class="hg-hud-value">--:--</span>
             </div>
+
             <div class="hg-hud-box">
                 <span class="hg-hud-label">LOOTOLÁSI IDŐ</span>
                 <span id="hg-loot-timer" class="hg-hud-value">--:--</span>
             </div>
+
             <div class="hg-hud-box">
                 <span class="hg-hud-label">FÁZIS</span>
                 <span id="hg-zone-index" class="hg-hud-value">1 / 5</span>
             </div>
+
         </div>
+
     </div>
 
+    <div id="countdown-overlay" class="countdown-overlay hidden">
+
+        <div id="countdown-number" class="countdown-number">
+            3
+        </div>
+
+    </div>
     <script src="script.js"></script>
     <script src="hud.js"></script>
 </body>

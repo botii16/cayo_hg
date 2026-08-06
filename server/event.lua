@@ -208,7 +208,7 @@ function HG.Event.StartCountdown()
 
         HG.Broadcast("hg:countdown", "GO!")
 
-        Wait(1000)
+        Wait(1500)
 
         HG.Spawn.StartMatch()
 

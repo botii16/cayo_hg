@@ -32,8 +32,8 @@ RegisterNetEvent("hg:showSpawn", function(data)
 
         villa = {
 
-            x = 44.6,
-            y = 56.5,
+            x = 55.5,
+            y = 72.5,
 
             w = 8.3,
             h = 12.2
@@ -128,12 +128,26 @@ RegisterNetEvent("hg:spawnPlayer", function(data)
 
     local ped = PlayerPedId()
 
-    SetEntityCoords(
-        ped,
+    RequestCollisionAtCoord(data.x, data.y, data.z)
+
+    local groundZ = data.z
+
+    local found, z = GetGroundZFor_3dCoord(
         data.x,
         data.y,
         data.z,
-        false,
+        false
+    )
+
+    if found then
+        groundZ = z + 1.0
+    end
+
+    SetEntityCoordsNoOffset(
+        ped,
+        data.x,
+        data.y,
+        groundZ,
         false,
         false,
         false
@@ -142,6 +156,8 @@ RegisterNetEvent("hg:spawnPlayer", function(data)
     FreezeEntityPosition(ped, false)
 
     SetEntityInvincible(ped, false)
+
+    SetPlayerControl(PlayerId(), true, 0)
 
     Wait(500)
 
