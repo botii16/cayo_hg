@@ -166,7 +166,7 @@ end
 
 function HG.Notify(source, msg)
 
-    TriggerClientEvent("hg:notify", source, msg)
+    -- Később saját NUI notify lesz.
 
 end
 
@@ -220,6 +220,40 @@ AddEventHandler("onResourceStart", function(resource)
     end
 
     HG.Reset()
+
+    for _, playerId in ipairs(GetPlayers()) do
+
+    local src = tonumber(playerId)
+
+    HG.Players[src] = {
+
+        Source = src,
+
+        Name = GetPlayerName(src),
+
+        Alive = false,
+
+        Joined = false,
+
+        Spawned = false,
+
+        Protected = false,
+
+        ConfirmedSpawn = false,
+
+        SpawnPosition = nil,
+
+        LastPosition = nil,
+
+        Kills = 0,
+
+        Deaths = 0,
+
+        Placement = 0
+
+    }
+
+end
 
     print(("^2[%s]^7 loaded."):format(HG.Name))
 

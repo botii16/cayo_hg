@@ -30,10 +30,7 @@ function HG.Event.Start()
             player.ConfirmedSpawn = false
             player.SpawnPosition = nil
 
-            TriggerClientEvent(
-                "hg:prepareSpawnSelection",
-                source
-            )
+            TriggerClientEvent("hg:showSpawnLoading", source)
 
         end
 

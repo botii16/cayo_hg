@@ -6,9 +6,7 @@ Config.Debug = false
 Config.Commands = {
 
     Start = "hgstart",
-
     Stop = "hgstop",
-
     Join = "hgjoin"
 
 }
@@ -19,15 +17,10 @@ Config.AdminAce = "hg"
 Config.Game = {
 
     MinPlayers = 2,
-
-    JoinTime = 60,
-
+    JoinTime = 10,
     SpawnSelectionTime = 20,
-
     LootPhase = 300,
-
     LootUpgradeTime = 120,
-
     AutoEnd = true
 
 }
@@ -97,15 +90,7 @@ Config.Map.Bounds = {
 
 Config.PlayArea = {
 
-    Center = vector3(
-
-        5011.0,
-
-        -5118.4,
-
-        25.0
-
-    ),
+    Center = vector3(5011.0, -5118.4, 25.0),
 
     Radius = 1050.0
 
@@ -116,50 +101,18 @@ Config.HQ = {
 
     Enabled = true,
 
-    Min = vector3(
+    Min = vector3(4982.6, -5832.7, 0.0),
 
-        4982.6,
+    Max = vector3(5001.1, -5601.3, 50.0),
 
-        -5832.7,
-
-        0.0
-
-    ),
-
-    Max = vector3(
-
-        5001.1,
-
-        -5601.3,
-
-        250.0
-
-    ),
-
-    PushBack = vector3(
-
-        4984.1157,
-
-        -5591.8501,
-
-        24.1306
-
-    )
+    PushBack = vector3(4984.1157, -5591.8501, 24.1306)
 
 }
 
 
 Config.Lobby = {}
 
-Config.Lobby.Position = vector3(
-
-    4486.31,
-
-    -4483.45,
-
-    4.21
-
-)
+Config.Lobby.Position = vector3(4470.1831, -4495.8145, 4.1937)
 
 Config.Lobby.Radius = 60.0
 

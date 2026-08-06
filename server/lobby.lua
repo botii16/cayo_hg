@@ -1,4 +1,8 @@
-HG.Lobby = HG.Lobby or {}
+HG.Lobby = {}
+
+HG.Lobby.Players = {}
+HG.Lobby.Invited = false
+HG.Lobby.EndTime = 0
 
 ----------------------------------------------------------
 -- Open Lobby
@@ -13,16 +17,16 @@ function HG.Lobby.Open()
     HG.Game.State = "JOINING"
     HG.Game.Joining = true
 
+    HG.Lobby.Invited = true
     HG.Lobby.Players = {}
-    HG.Lobby.EndsAt = os.time() + Config.Game.JoinTime
+    HG.Lobby.EndTime = os.time() + Config.Game.JoinTime
 
-    HG.Broadcast("hg:lobbyOpened", {
-        endTime = HG.Lobby.EndsAt,
+    TriggerClientEvent("hg:invite", -1, {
         joinTime = Config.Game.JoinTime,
         minPlayers = Config.Game.MinPlayers
     })
 
-    print("^2[HG]^7 Lobby opened.")
+    HG.Utils.Debug("Lobby opened.")
 
     return true
 
@@ -35,59 +39,90 @@ end
 function HG.Lobby.Close()
 
     HG.Game.Joining = false
-    HG.Lobby.EndsAt = 0
+    HG.Game.State = "IDLE"
 
-    HG.Broadcast("hg:lobbyClosed")
+    HG.Lobby.Invited = false
+    HG.Lobby.EndTime = 0
 
-    print("^2[HG]^7 Lobby closed.")
+    TriggerClientEvent("hg:lobbyClosed", -1)
+
+    HG.Utils.Debug("Lobby closed.")
 
 end
 
 ----------------------------------------------------------
--- Player Join
+-- Accept Invite
 ----------------------------------------------------------
 
-function HG.Lobby.AddPlayer(source)
+RegisterNetEvent("hg:acceptInvite", function()
 
-    local player = HG.GetPlayer(source)
+    local src = source
 
-    if not player then
-        return false, "Player not found."
+    if not HG.Lobby.Invited then
+        return
     end
 
-    if not HG.Game.Joining then
-        return false, "Lobby is closed."
+    local player = HG.GetPlayer(src)
+
+    if not player then
+        return
     end
 
     if player.Joined then
-        return false, "Already joined."
+        return
+    end
+
+    HG.Player.Join(src)
+
+    TriggerClientEvent("hg:openLobby", src, {
+        joinTime = Config.Game.JoinTime,
+        minPlayers = Config.Game.MinPlayers
+    })
+
+end)
+
+----------------------------------------------------------
+-- Join Match
+----------------------------------------------------------
+
+RegisterNetEvent("hg:lobbyJoin", function()
+
+    local src = source
+
+    if not HG.Game.Joining then
+        return
+    end
+
+    local player = HG.GetPlayer(src)
+
+    if not player then
+        return
+    end
+
+    if player.Joined then
+        return
     end
 
     player.Joined = true
     player.Alive = true
 
-    HG.Lobby.Players[source] = true
+    HG.Lobby.Players[src] = true
 
-    HG.Broadcast(
-        "hg:lobbyPlayerList",
-        HG.Utils.TableCount(HG.Lobby.Players)
-    )
+    HG.Lobby.Sync()
 
-    HG.Notify(source, "~g~Sikeresen csatlakoztál a Hunger Gameshez!")
+    TriggerClientEvent("hg:lobbyJoined", src)
 
-    print(("[HG] %s joined lobby."):format(GetPlayerName(source)))
-
-    return true
-
-end
+end)
 
 ----------------------------------------------------------
--- Player Leave
+-- Leave Match
 ----------------------------------------------------------
 
-function HG.Lobby.RemovePlayer(source)
+RegisterNetEvent("hg:lobbyLeave", function()
 
-    local player = HG.GetPlayer(source)
+    local src = source
+
+    local player = HG.GetPlayer(src)
 
     if not player then
         return
@@ -96,122 +131,51 @@ function HG.Lobby.RemovePlayer(source)
     player.Joined = false
     player.Alive = false
 
-    HG.Lobby.Players[source] = nil
+    HG.Lobby.Players[src] = nil
 
-    HG.Broadcast(
-        "hg:lobbyPlayerList",
-        HG.Utils.TableCount(HG.Lobby.Players)
-    )
+    HG.Player.Leave(src)
+
+    HG.Lobby.Sync()
+
+    TriggerClientEvent("hg:lobbyClosed", src)
+
+end)
+
+----------------------------------------------------------
+-- Lobby Sync
+----------------------------------------------------------
+
+function HG.Lobby.Sync()
+
+    local list = {}
+
+    for src in pairs(HG.Lobby.Players) do
+
+        table.insert(list, {
+            id = src,
+            name = GetPlayerName(src)
+        })
+
+    end
+
+    TriggerClientEvent("hg:updateLobby", -1, {
+
+        players = list,
+
+        joinedPlayers = #list,
+
+        onlinePlayers = #GetPlayers(),
+
+        minPlayers = Config.Game.MinPlayers,
+
+        timeLeft = math.max(0, HG.Lobby.EndTime - os.time())
+
+    })
 
 end
 
 ----------------------------------------------------------
--- Joined Players
-----------------------------------------------------------
-
-function HG.Lobby.Count()
-
-    return HG.Utils.TableCount(HG.Lobby.Players)
-
-end
-
-----------------------------------------------------------
--- Is Joined
-----------------------------------------------------------
-
-function HG.Lobby.IsJoined(source)
-
-    return HG.Lobby.Players[source] == true
-
-end
-
-----------------------------------------------------------
--- Start Command
-----------------------------------------------------------
-
-RegisterCommand(Config.Commands.Start, function(source)
-
-    if source ~= 0 and not IsPlayerAceAllowed(source, Config.AdminAce) then
-        return
-    end
-
-    if HG.Game.State ~= "IDLE" then
-
-        if source ~= 0 then
-            HG.Notify(source, "~r~Már fut egy Hunger Games esemény!")
-        end
-
-        return
-    end
-
-    HG.Lobby.Open()
-
-end)
-
-----------------------------------------------------------
--- Stop Command
-----------------------------------------------------------
-
-RegisterCommand(Config.Commands.Stop, function(source)
-
-    if source ~= 0 and not IsPlayerAceAllowed(source, Config.AdminAce) then
-        return
-    end
-
-    HG.Reset()
-
-    HG.Broadcast("hg:eventStopped")
-
-    print("^1[HG]^7 Event stopped.")
-
-end)
-
-----------------------------------------------------------
--- Join Command
-----------------------------------------------------------
-
-RegisterCommand(Config.Commands.Join, function(source)
-
-    if source == 0 then
-        return
-    end
-
-    local ok, reason = HG.Lobby.AddPlayer(source)
-
-    if not ok then
-        HG.Notify(source, "~r~"..reason)
-    end
-
-end)
-
-----------------------------------------------------------
--- Leave Command
-----------------------------------------------------------
-
-RegisterCommand("hgleave", function(source)
-
-    if source == 0 then
-        return
-    end
-
-    HG.Lobby.RemovePlayer(source)
-
-    HG.Notify(source, "~y~Kiléptél a Hunger Games lobbyból.")
-
-end)
-
-----------------------------------------------------------
--- Disconnect
-----------------------------------------------------------
-
-AddEventHandler("playerDropped", function()
-
-    HG.Lobby.RemovePlayer(source)
-
-end)
-
-----------------------------------------------------------
--- Lobby Thread
+-- Countdown Thread
 ----------------------------------------------------------
 
 CreateThread(function()
@@ -220,42 +184,27 @@ CreateThread(function()
 
         Wait(1000)
 
-        if HG.Game.State ~= "JOINING" then
+        if not HG.Game.Joining then
             goto continue
         end
 
-        local remaining = HG.Lobby.EndsAt - os.time()
+        HG.Lobby.Sync()
 
-        if remaining < 0 then
-            remaining = 0
-        end
+        if os.time() >= HG.Lobby.EndTime then
 
-        HG.Broadcast(
-            "hg:lobbyCountdown",
-            remaining,
-            HG.Lobby.Count(),
-            Config.Game.MinPlayers
-        )
+            if HG.Utils.TableCount(HG.Lobby.Players) < Config.Game.MinPlayers then
 
-        if remaining == 0 then
-
-            if HG.Lobby.Count() < Config.Game.MinPlayers then
-
-                HG.Broadcast("hg:lobbyNotEnoughPlayers")
+                TriggerClientEvent("hg:notEnoughPlayers", -1)
 
                 HG.Lobby.Close()
-
-                HG.Game.State = "IDLE"
 
             else
 
                 HG.Game.State = "STARTING"
 
-                print("^2[HG]^7 Lobby finished.")
+                HG.Game.Joining = false
 
-                if HG.Event and HG.Event.Start then
-                    HG.Event.Start()
-                end
+                HG.Event.Start()
 
             end
 
@@ -264,5 +213,29 @@ CreateThread(function()
         ::continue::
 
     end
+
+end)
+
+----------------------------------------------------------
+-- Commands
+----------------------------------------------------------
+
+RegisterCommand(Config.Commands.Start, function(source)
+
+    if source ~= 0 and not IsPlayerAceAllowed(source, Config.AdminAce) then
+        return
+    end
+
+    HG.Lobby.Open()
+
+end)
+
+RegisterCommand(Config.Commands.Stop, function(source)
+
+    if source ~= 0 and not IsPlayerAceAllowed(source, Config.AdminAce) then
+        return
+    end
+
+    HG.Event.Stop()
 
 end)

@@ -328,3 +328,64 @@ body {
 .spawn-inner .hg-btn {
   margin-top: 4px;
 }
+
+#invite-panel {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  width: 420px;
+
+  padding: 30px;
+
+  border-radius: 14px;
+
+  background: rgba(18, 18, 18, 0.95);
+
+  border: 2px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.45);
+
+  text-align: center;
+
+  z-index: 1000;
+}
+
+#invite-panel .panel-title {
+  font-size: 28px;
+
+  font-weight: 700;
+
+  color: #ffffff;
+
+  margin-bottom: 12px;
+}
+
+#invite-panel .panel-subtitle {
+  color: #69ff8f;
+
+  font-size: 18px;
+
+  margin-bottom: 20px;
+}
+
+#invite-panel .panel-text {
+  color: #d8d8d8;
+
+  margin-bottom: 30px;
+
+  line-height: 24px;
+}
+
+#accept-btn {
+  width: 100%;
+
+  margin-bottom: 12px;
+}
+
+#decline-btn {
+  width: 100%;
+}

@@ -5,6 +5,10 @@ const lobbyCount = document.getElementById('lobby-count');
 const joinBtn = document.getElementById('join-btn');
 const joinedMsg = document.getElementById('joined-msg');
 
+const invitePanel = document.getElementById('invite-panel');
+const acceptBtn = document.getElementById('accept-btn');
+const declineBtn = document.getElementById('decline-btn');
+
 const spawnPanel = document.getElementById('spawn-panel');
 const spawnTimer = document.getElementById('spawn-timer');
 const mapWrapper = document.getElementById('map-wrapper');
@@ -66,13 +70,32 @@ window.addEventListener('message', (event) => {
     const data = event.data;
 
     switch (data.action) {
+        case 'showInvite':
+
+            invitePanel.classList.remove('hidden');
+            lobbyPanel.classList.add('hidden');
+
+            break;
+
+        case 'hideInvite':
+
+            invitePanel.classList.add('hidden');
+
+            break;
         case 'showLobby':
+
             currentMinPlayers = data.minPlayers;
-            currentOnlinePlayers = data.onlinePlayers || currentOnlinePlayers;
+            currentOnlinePlayers = data.onlinePlayers || 0;
+
             lobbyJoined = !!data.joined;
+
             lobbyPanel.classList.remove('hidden');
-            renderLobbyPlayers(data.players, data.minPlayers);
+
+            renderLobbyPlayers(data.players || [], data.minPlayers);
+
+            lobbyTimer.textContent = data.timeLeft + "s";
             syncLobbyJoinedState();
+
             break;
 
         case 'hideLobby':
@@ -83,13 +106,16 @@ window.addEventListener('message', (event) => {
             lobbyTimer.textContent = data.timeLeft + 's';
             break;
 
-        case 'lobbyPlayers':
-            currentOnlinePlayers = data.onlinePlayers || currentOnlinePlayers;
+        case 'updateLobby':
+
+            currentOnlinePlayers = data.onlinePlayers;
+
             renderLobbyPlayers(data.players, data.minPlayers);
-            if (typeof data.joined === 'boolean') {
-                lobbyJoined = data.joined;
-            }
-            syncLobbyJoinedState();
+
+            lobbyTimer.textContent = data.timeLeft + "s";
+            lobbyCount.textContent =
+                `${data.joinedPlayers} / ${data.onlinePlayers}`;
+
             break;
 
         case 'showSpawnMap':
@@ -161,7 +187,7 @@ function positionRect(el, xPct, yPct, wPct, hPct, isCircle) {
 }
 
 joinBtn.addEventListener('click', () => {
-    post('joinEvent', {}).then(res => {
+    post('acceptInvite', {}).then(res => {
         if (res && res.ok) {
             lobbyJoined = true;
             syncLobbyJoinedState();
@@ -212,4 +238,20 @@ document.addEventListener('keydown', (e) => {
         post('closeLobby', {});
         lobbyPanel.classList.add('hidden');
     }
+});
+
+acceptBtn.addEventListener('click', () => {
+
+    invitePanel.classList.add('hidden');
+
+    post('acceptInvite', {});
+
+});
+
+declineBtn.addEventListener('click', () => {
+
+    invitePanel.classList.add('hidden');
+
+    post('declineInvite', {});
+
 });
