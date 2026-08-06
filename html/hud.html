@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HG HUD</title>
+    <link rel="stylesheet" href="hud.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="hg-hud" class="hg-hud hidden">
+        <div class="hg-hud-row">
+            <div class="hg-hud-box">
+                <span class="hg-hud-label">KÖR SZŰKÜL</span>
+                <span id="hg-zone-timer" class="hg-hud-value">--:--</span>
+            </div>
+            <div class="hg-hud-box">
+                <span class="hg-hud-label">LOOTOLÁSI IDŐ</span>
+                <span id="hg-loot-timer" class="hg-hud-value">--:--</span>
+            </div>
+            <div class="hg-hud-box">
+                <span class="hg-hud-label">FÁZIS</span>
+                <span id="hg-zone-index" class="hg-hud-value">1 / 5</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="hud.js"></script>
+</body>
+
+</html>

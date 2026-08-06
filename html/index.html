@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cayo Perico Hunger Games</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="hud.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="lobby-panel" class="hg-panel hidden">
+        <div class="hg-panel-inner">
+            <div class="hg-header">
+                <span class="hg-title">CAYO PERICO</span>
+                <span class="hg-subtitle">DROXEN HUNGER GAMES</span>
+            </div>
+
+            <div class="hg-timer-row">
+                <span class="hg-label">INDULÁSIG</span>
+                <span id="lobby-timer" class="hg-timer">--</span>
+            </div>
+
+            <div class="hg-players-box">
+                <div class="hg-players-header">
+                    <span>JELENTKEZŐK</span>
+                    <span id="lobby-count">0 / 0</span>
+                </div>
+                <ul id="lobby-list" class="hg-players-list"></ul>
+            </div>
+
+            <button id="join-btn" class="hg-btn">CSATLAKOZÁS A MECCSHEZ</button>
+            <div id="joined-msg" class="hg-joined-msg hidden">JELENTKEZVE ✓</div>
+        </div>
+    </div>
+
+    <div id="spawn-panel" class="hg-panel hidden">
+        <div class="hg-panel-inner spawn-inner">
+            <div class="hg-header">
+                <span class="hg-title">VÁLASSZ LANDOLÁSI PONTOT</span>
+            </div>
+
+            <div class="hg-timer-row">
+                <span class="hg-label">HÁTRALÉVŐ IDŐ</span>
+                <span id="spawn-timer" class="hg-timer">--</span>
+            </div>
+
+            <div id="spawn-loading" class="spawn-loading hidden">Töltés.</div>
+            <div id="spawn-status" class="spawn-status hidden"></div>
+
+            <div id="map-wrapper" class="map-wrapper">
+                <img id="map-image" src="" alt="map">
+                <div id="zone-circle" class="zone-circle"></div>
+                <div id="villa-zone" class="villa-zone"></div>
+                <div id="map-marker" class="map-marker hidden"></div>
+            </div>
+
+            <button id="confirm-spawn-btn" class="hg-btn" disabled>UGRÁS</button>
+        </div>
+    </div>
+
+    <div id="hg-hud" class="hg-hud hidden">
+        <div id="hg-hud-notice" class="hg-hud-notice hidden"></div>
+        <div class="hg-hud-row">
+            <div class="hg-hud-box">
+                <span class="hg-hud-label">KÖR SZŰKÜL</span>
+                <span id="hg-zone-timer" class="hg-hud-value">--:--</span>
+            </div>
+            <div class="hg-hud-box">
+                <span class="hg-hud-label">LOOTOLÁSI IDŐ</span>
+                <span id="hg-loot-timer" class="hg-hud-value">--:--</span>
+            </div>
+            <div class="hg-hud-box">
+                <span class="hg-hud-label">FÁZIS</span>
+                <span id="hg-zone-index" class="hg-hud-value">1 / 5</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="hud.js"></script>
+</body>
+
+</html>
