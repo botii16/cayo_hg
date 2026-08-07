@@ -12,19 +12,26 @@ HG.Circle.PillarSize = 1.2
 -- Circle State
 ----------------------------------------------------------
 
+HG.Circle.WaitStart = 0
+HG.Circle.WaitDuration = 0
+
+HG.Circle.State = "WAIT"
+
 HG.Circle.Data = nil
+
+HG.Circle.FromRadius = 0.0
+HG.Circle.ToRadius = 0.0
+
+HG.Circle.StartTime = 0
+HG.Circle.Duration = 0
+
+HG.Circle.IsShrinking = false
 
 HG.Circle.Blip = nil
 
 HG.Circle.Enabled = false
 
 HG.Circle.RenderDistance = 180.0
-
-HG.Circle.Step = 8
-
-HG.Circle.PillarHeight = 8.0
-
-HG.Circle.PillarSize = 0.8
 
 ----------------------------------------------------------
 -- Set Circle
@@ -83,6 +90,18 @@ function HG.Circle.Render()
 
     if not HG.Circle.Data then
         return
+    end
+
+    if HG.Circle.IsShrinking then
+
+        local progress = (GetGameTimer() - HG.Circle.StartTime) / HG.Circle.Duration
+
+        progress = math.min(progress, 1.0)
+
+        HG.Circle.Data.radius =
+            HG.Circle.FromRadius +
+            (HG.Circle.ToRadius - HG.Circle.FromRadius) * progress
+
     end
 
     local ped = PlayerPedId()
@@ -155,6 +174,38 @@ RegisterNetEvent("hg:createCircle", function(data)
     SetBlipColour(HG.Circle.Blip, 2)
     SetBlipAlpha(HG.Circle.Blip, 100)
 
+    HG.Circle.FromRadius = data.radius
+    HG.Circle.ToRadius = data.radius
+
+end)
+
+RegisterNetEvent("hg:circleWait", function(data)
+
+    HG.Circle.State = "WAIT"
+
+    HG.Circle.IsShrinking = false
+
+    HG.Circle.WaitStart = GetGameTimer()
+    HG.Circle.WaitDuration = data.duration * 1000
+
+    HG.Circle.Data.phase = data.phase
+
+end)
+
+RegisterNetEvent("hg:circleShrink", function(data)
+
+    HG.Circle.State = "SHRINK"
+
+    HG.Circle.IsShrinking = true
+
+    HG.Circle.FromRadius = data.fromRadius
+    HG.Circle.ToRadius = data.toRadius
+
+    HG.Circle.StartTime = GetGameTimer()
+    HG.Circle.Duration = data.duration * 1000
+
+    HG.Circle.Data.phase = data.phase
+
 end)
 
 ----------------------------------------------------------
@@ -176,6 +227,38 @@ CreateThread(function()
         end
 
         Wait(sleep)
+
+    end
+
+end)
+
+----------------------------------------------------------
+-- Update Radius Blip
+----------------------------------------------------------
+
+CreateThread(function()
+
+    while true do
+
+        Wait(250)
+
+        if HG.Circle.Blip and HG.Circle.Data then
+
+            RemoveBlip(HG.Circle.Blip)
+
+            HG.Circle.Blip = AddBlipForRadius(
+
+                HG.Circle.Data.x,
+                HG.Circle.Data.y,
+                0.0,
+                HG.Circle.Data.radius
+
+            )
+
+            SetBlipColour(HG.Circle.Blip, 2)
+            SetBlipAlpha(HG.Circle.Blip, 100)
+
+        end
 
     end
 

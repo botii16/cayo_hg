@@ -39,37 +39,37 @@ Config.Circle = {
     Stages = {
 
         {
-            Wait = 120,
+            Wait = 5, --120
             Shrink = 90,
             Radius = 800.0
         },
 
         {
-            Wait = 90,
+            Wait = 5, --90
             Shrink = 70,
             Radius = 550.0
         },
 
         {
-            Wait = 75,
+            Wait = 5, --75
             Shrink = 60,
             Radius = 350.0
         },
 
         {
-            Wait = 60,
+            Wait = 5, --60
             Shrink = 50,
             Radius = 180.0
         },
 
         {
-            Wait = 45,
+            Wait = 5, --45
             Shrink = 35,
             Radius = 90.0
         },
 
         {
-            Wait = 30,
+            Wait = 5, --30
             Shrink = 25,
             Radius = 35.0
         }

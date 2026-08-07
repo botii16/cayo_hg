@@ -20,6 +20,7 @@ function HG.Event.Start()
     HG.Utils.Debug("Event started.")
 
     HG.Circle.Create()
+    HG.Circle.StartStages()
 
     for source in pairs(HG.Lobby.Players) do
 

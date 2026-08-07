@@ -136,6 +136,10 @@ window.addEventListener('message', (event) => {
 
             document.getElementById("hg-alive").textContent = data.alive;
             document.getElementById("hg-kills").textContent = data.kills;
+
+            document.getElementById("hg-zone-timer").textContent = event.data.zoneTimer;
+            document.getElementById("hg-zone-index").textContent = event.data.phase;
+
             break;
 
         case 'showInvite':
